@@ -2,6 +2,9 @@ package com.example.playmusic.ui.player.view
 
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -197,63 +200,76 @@ private fun ActiveLyricLineItem(
     Canvas(
         modifier = modifier
             .fillMaxWidth()
-            .height(36.dp)
+            .padding(horizontal = 16.dp)
+            .height(50.dp)
     ) {
         val width = size.width
         val height = size.height
 
         val textSizePx = 16.sp.toPx()
+        val maxAvailableWidth = width.toInt().coerceAtLeast(100)
 
-        val basePaint = Paint().apply {
+        val baseTextPaint = TextPaint().apply {
             isAntiAlias = true
             textSize = textSizePx
-            color = Color.White.toArgb()
+            color = Color.White.copy(alpha = 0.9f).toArgb()
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            textAlign = Paint.Align.CENTER
         }
 
-        val highlightPaint = Paint().apply {
+        val highlightTextPaint = TextPaint().apply {
             isAntiAlias = true
             textSize = textSizePx
             color = Color(0xFF1E1E1E).toArgb()
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            textAlign = Paint.Align.CENTER
         }
 
-        val measurePaint = Paint(basePaint).apply {
+        val measurePaint = Paint(baseTextPaint).apply {
             textAlign = Paint.Align.LEFT
         }
 
+        fun createStaticLayout(text: String, paint: TextPaint): StaticLayout {
+            return StaticLayout.Builder.obtain(text, 0, text.length, paint, maxAvailableWidth)
+                .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                .setLineSpacing(0f, 1.0f)
+                .build()
+        }
+
         drawContext.canvas.nativeCanvas.apply {
-            val centerY = height * 0.7f
             val fullText = line.fullText
-            val actualLineWidth = basePaint.measureText(fullText)
-            val lineStartX = (width - actualLineWidth) / 2f
+            val baseLayout = createStaticLayout(fullText, baseTextPaint)
 
-            drawText(fullText, width / 2f, centerY, basePaint)
+            val centerY = height / 2f
+            save()
+            translate(width / 2f - baseLayout.width / 2f, centerY - baseLayout.height / 2f)
+            baseLayout.draw(this)
 
+            val highlightLayout = createStaticLayout(fullText, highlightTextPaint)
             var highlightedWidth = 0f
             for (word in line.words) {
-                val wordWidth = measurePaint.measureText(word.text)
+                val wWidth = measurePaint.measureText(word.text)
                 if (currentPositionMs >= word.endTimeMs) {
-                    highlightedWidth += wordWidth
+                    highlightedWidth += wWidth
                 } else if (currentPositionMs > word.startTimeMs) {
                     val duration = (word.endTimeMs - word.startTimeMs).coerceAtLeast(1L)
                     val progress = (currentPositionMs - word.startTimeMs).toFloat() / duration
-                    highlightedWidth += (wordWidth * progress.coerceIn(0f, 1f))
+                    highlightedWidth += (wWidth * progress.coerceIn(0f, 1f))
                     break
                 } else {
                     break
                 }
             }
 
+            val totalLineWidth = measurePaint.measureText(fullText)
+            val lineStartX = (baseLayout.width - totalLineWidth) / 2f
             val clipRight = lineStartX + highlightedWidth
-            if (clipRight > lineStartX) {
+
+            if (clipRight > 0f) {
                 save()
-                clipRect(lineStartX, 0f, clipRight, height)
-                drawText(fullText, width / 2f, centerY, highlightPaint)
+                clipRect(0f, 0f, clipRight, baseLayout.height.toFloat())
+                highlightLayout.draw(this)
                 restore()
             }
+            restore()
         }
     }
 }
