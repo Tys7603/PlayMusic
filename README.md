@@ -65,7 +65,6 @@ d:/Android kotlin/PlayMusic/app/src/main/java/com/example/playmusic/
 ├── ui/
 │   ├── components/
 │   │   ├── KaraokeCanvas.kt           # Canvas tô màu Karaoke 2 dòng luân phiên
-│   │   ├── DiscAnimation.kt           # Đĩa nhạc đĩa than xoay tròn & cần đọc
 │   │   └── PlayerControls.kt          # Thanh điều khiển nhạc & Seekbar siêu mảnh
 │   ├── player/
 │   │   ├── PlayerViewModel.kt         # Quản lý ExoPlayer engine & 60fps Ticker State

@@ -201,7 +201,7 @@ private fun ActiveLyricLineItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
-            .height(50.dp)
+            .height(54.dp)
     ) {
         val width = size.width
         val height = size.height
@@ -259,16 +259,26 @@ private fun ActiveLyricLineItem(
                 }
             }
 
-            val totalLineWidth = measurePaint.measureText(fullText)
-            val lineStartX = (baseLayout.width - totalLineWidth) / 2f
-            val clipRight = lineStartX + highlightedWidth
+            var remainingWidth = highlightedWidth
+            val lineCount = baseLayout.lineCount
 
-            if (clipRight > 0f) {
-                save()
-                clipRect(0f, 0f, clipRight, baseLayout.height.toFloat())
-                highlightLayout.draw(this)
-                restore()
+            for (i in 0 until lineCount) {
+                val lineTop = baseLayout.getLineTop(i).toFloat()
+                val lineBottom = baseLayout.getLineBottom(i).toFloat()
+                val lineLeft = baseLayout.getLineLeft(i)
+                val lineRight = baseLayout.getLineRight(i)
+                val lineWidth = lineRight - lineLeft
+
+                if (remainingWidth > 0f && lineWidth > 0f) {
+                    val clipWidth = remainingWidth.coerceAtMost(lineWidth)
+                    save()
+                    clipRect(lineLeft, lineTop, lineLeft + clipWidth, lineBottom)
+                    highlightLayout.draw(this)
+                    restore()
+                    remainingWidth -= lineWidth
+                }
             }
+
             restore()
         }
     }
