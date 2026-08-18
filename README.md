@@ -1,12 +1,39 @@
 # PlayMusic - Android Jetpack Compose Karaoke Player App 🎵🎤
 
-Dự án ứng dụng Trình phát nhạc Karaoke chuẩn Android hiện đại, được xây dựng **100% bằng Jetpack Compose** với kiến trúc Clean Architecture, MVVM, Koin Dependency Injection và ExoPlayer (Media3).
+Dự án ứng dụng Trình phát nhạc Karaoke chuẩn Android hiện đại, được xây dựng **100% bằng Jetpack Compose** với giao diện mượt mà và trải nghiệm hát Karaoke độc đáo.
 
 ---
 
 ## 📌 Giới Thiệu Dự Án
 
-**PlayMusic** là ứng dụng trình phát nhạc Android hỗ trợ hiển thị lời bài hát Karaoke khớp thời gian thực từng từ (sub-character word-level highlighting) ở tốc độ 60fps (chu kỳ 16ms). Giao diện ứng dụng sở hữu phong cách thiết kế Pastel Linear Gradient sang trọng, hỗ trợ xem trước lyric 2 dòng luân phiên và màn hình danh sách toàn bộ lời bài hát cuộn tự động thông minh.
+**PlayMusic** là ứng dụng trình phát nhạc Android hỗ trợ hiển thị lời bài hát Karaoke khớp thời gian thực từng từ. Ứng dụng mang đến trải nghiệm âm nhạc sống động với phong cách thiết kế Pastel Linear Gradient sang trọng, hỗ trợ xem trước lyric 2 dòng luân phiên thông minh và màn hình xem toàn bộ danh sách lời bài hát tự động cuộn theo giai điệu.
+
+---
+
+## ✨ Các Tính Năng Nổi Bật
+
+### 1. 🎵 Phát Nhạc Trực Tuyến & Điều Khiển Phát Nhạc
+- Phát nhạc mượt mà với âm thanh chất lượng cao.
+- Hỗ trợ đầy đủ các thao tác: Bật/Tạm dừng nhạc, tua tiến/tua lùi thời gian phát.
+- Hiển thị thời gian đã phát và thời gian đếm ngược còn lại của bài hát.
+
+### 2. 🎤 Tô Màu Lời Karaoke Luân Phiên 2 Dòng Thông Minh
+- **Tô màu từng từ theo thời gian thực**: Chữ trên màn hình tự động chuyển màu mượt mà chuẩn xác theo nhịp hát.
+- **Hiển thị luân phiên 2 dòng**:
+  - Khi một dòng đang được hát và tô màu, dòng còn lại sẽ tự động hiển thị câu hát tiếp theo để người dùng chuẩn bị trước.
+  - Sau khi hát xong một câu, vị trí hát sẽ luân phiên chuyển đổi giữa dòng trên và dòng dưới giúp trải nghiệm nhìn không bị ngắt quãng.
+- **Tự động căn giữa & xuống dòng**: Các câu hát dài được tự động ngắt xuống dòng cân đối, luôn hiển thị chính giữa màn hình mà không bị tràn ra ngoài.
+
+### 3. 📜 Màn Hình Xem Toàn Bộ Lời Bài Hát (Full Lyric)
+- **Xem toàn bộ lời bài hát**: Chạm vào vùng lyric ở màn hình chính để mở danh sách toàn bộ lời bài hát từ đầu đến cuối.
+- **Tự động cuộn theo nhạc**: Danh sách lời bài hát tự động cuộn đưa câu hát đang phát vào vị trí trung tâm màn hình.
+- **Thông minh khi thao tác vuốt**: Khi người dùng chạm vuốt danh sách để đọc trước lời, hệ thống tự động tạm dừng cuộn. Khi thả tay ra, danh sách sẽ tự động cuộn mượt trở lại đúng vị trí câu hát đang phát.
+- **Tua nhạc theo câu hát**: Bấm trực tiếp vào bất kỳ dòng lyric nào trong danh sách để tua bài hát đến ngay thời điểm đó.
+
+### 4. 🎨 Giao Diện Hiện Đại & Tinh Tế
+- Tông màu nền Pastel Gradient (Xanh - Tím - Hồng) hài hòa, sang trọng.
+- Thanh tua nhạc siêu mảnh, tinh gọn, không chi tiết thừa.
+- Bộ biểu tượng hiển thị sắc nét và tương thích tốt trên mọi kích thước màn hình.
 
 ---
 
@@ -37,7 +64,7 @@ d:/Android kotlin/PlayMusic/app/src/main/java/com/example/playmusic/
 │   └── AppModule.kt                   # Koin DI Module khai báo ViewModel
 ├── ui/
 │   ├── components/
-│   │   ├── KaraokeCanvas.kt           # Canvas tô màu Karaoke 2 dòng luân phiên (Ping-Pong)
+│   │   ├── KaraokeCanvas.kt           # Canvas tô màu Karaoke 2 dòng luân phiên
 │   │   ├── DiscAnimation.kt           # Đĩa nhạc đĩa than xoay tròn & cần đọc
 │   │   └── PlayerControls.kt          # Thanh điều khiển nhạc & Seekbar siêu mảnh
 │   ├── player/
@@ -50,32 +77,6 @@ d:/Android kotlin/PlayMusic/app/src/main/java/com/example/playmusic/
 │   │       └── FullLyricContent.kt    # Màn hình xem toàn bộ Lyric cuộn tự động
 │   └── theme/                         # Theme, Color, Type
 ```
-
----
-
-## ✨ Các Tính Năng Nổi Bật
-
-### 1. 🎵 Trình Phát Nhạc Chất Lượng Cao (ExoPlayer Media3)
-- Phát phát trực tuyến file âm thanh beat MP3 mượt mà.
-- Hỗ trợ Play / Pause, tua tiến / tua lùi, cập nhật thời gian đã phát và thời gian còn lại (dạng số âm `-mm:ss`).
-
-### 2. 🎤 Thuật Toán Tô Màu Lyric Karaoke Luân Phiên 2 Dòng (Ping-Pong)
-- **Tô màu từng từ thời gian thực**: Sử dụng `Canvas.clipRect()` cắt cúp độ rộng theo millisecond của từng từ giúp câu hát được tô màu đen mượt mà trên nền trắng.
-- **Thuật toán luân phiên 2 dòng**:
-  - Dòng số chẵn (0, 2, 4...): Dòng trên active tô màu; Dòng dưới hiển thị câu hát tiếp theo ở dạng xem trước.
-  - Dòng số lẻ (1, 3, 5...): Dòng dưới active tô màu; Dòng trên cập nhật câu hát tiếp-tiếp theo ở dạng xem trước.
-- **Căn giữa & Xuống dòng tự động (`StaticLayout`)**: Tự động ngắt từ xuống dòng và căn giữa cân đối khi câu hát quá dài.
-
-### 3. 📜 Màn Hình Xem Toàn Bộ Lời Bài Hát (Full Lyric Screen)
-- Chạm vào vùng Lyric ở màn hình chính để mở màn hình toàn bộ lời bài hát.
-- **Tự động cuộn theo nhạc**: Danh sách `LazyColumn` tự động cuộn đưa câu hát hiện tại vào vị trí trung tâm màn hình.
-- **Tạm dừng khi vuốt tay**: Khi người dùng cuộn tay (`isScrollInProgress == true`), chế độ tự động cuộn tạm dừng để xem các câu hát khác. Ngay khi thả tay ra, danh sách tự động cuộn mượt trở lại câu hát đang phát.
-- **Tua nhanh đến câu hát**: Chạm vào bất kỳ dòng lyric nào trong danh sách để tua bài hát đến mốc thời gian đó.
-
-### 4. 🎨 Giao Diện Pastel Premium & Koin DI Clean Code
-- Thiết kế nền Pastel Gradient (Xanh - Tím - Hồng) chuẩn hiện đại.
-- Thanh tua Seekbar siêu mảnh `3.dp` không chấm thừa, biểu tượng Vector XML sắc nét.
-- Kiến trúc Clean Code không chứa comment rác, tách biệt Stateful Screen & Stateless View.
 
 ---
 
